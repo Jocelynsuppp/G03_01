@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ========== Meta Tags ========== -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="modinatheme">
+    <meta name="description" content="Foodking - Fast Food Restaurant Html">
+    <!-- ======== Page title ============ -->
+    <title>shawarma UTMKL - Sign Up</title>
+    <!--<< Favcion >>-->
+    <link rel="shortcut icon" href="assets/img/logo/favicon.svg">
+    <!--<< Bootstrap min.css >>-->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!--<< Font Awesome.css >>-->
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    <!--<< Animate.css >>-->
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <!--<< Magnific Popup.css >>-->
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <!--<< MeanMenu.css >>-->
+    <link rel="stylesheet" href="assets/css/meanmenu.css">
+    <!--<< Swiper Bundle.css >>-->
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <!--<< Nice Select.css >>-->
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <!--<< Main.css >>-->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!--<< Style.css >>-->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sign-Up Section -->
+    <section class="signup-section" style="padding: 50px 0; background-color: #f9f9f9;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="signup-form p-4 shadow-sm rounded" style="background: #fff;">
+                        <h2 class="text-center mb-4" style="color: #333;">Sign Up</h2>
+                        <form id="signupForm" method="POST">
+                            <div class="form-group mb-3">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                <button type="button" id="getOtp" class="btn btn-secondary mt-2">Get OTP</button>
+                                <small id="emailFeedback" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="otp">Enter OTP</label>
+                                <input type="text" id="otp" name="otp" class="form-control" placeholder="Enter the OTP" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="confirm-password">Confirm Password</label>
+                                <input type="password" id="confirm-password" name="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block w-100">Sign Up</button>
+                        </form>
+                        <p class="text-center mt-3">
+                            Already have an account? <a href="login.html" style="color: #007bff;">Log In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const apiKey = 'YOUR_API_KEY_HERE'; // Replace with your MailboxLayer API key
+
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            const email = document.getElementById('email').value;
+
+            // Call MailboxLayer API to verify email
+            const url = `https://apilayer.net/api/check?access_key=${apiKey}&email=${encodeURIComponent(email)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const feedbackElement = document.getElementById('emailFeedback');
+                    if (data.format_valid && data.smtp_check) {
+                        feedbackElement.textContent = 'Email is valid!';
+                        feedbackElement.style.color = 'green';
+
+                        // Optionally, submit the form programmatically
+                        // e.target.submit();
+                    } else {
+                        feedbackElement.textContent = 'Invalid email address. Please check again.';
+                        feedbackElement.style.color = 'red';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while verifying the email. Please try again.');
+                });
+        });
+
+        document.getElementById('getOtp').addEventListener('click', function () {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter an email address first.');
+                return;
+            }
+
+            // Send OTP request (replace with actual backend endpoint for sending OTP)
+            fetch('/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('OTP has been sent to your email.');
+                    } else {
+                        alert('Failed to send OTP. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while sending the OTP. Please try again.');
+                });
+        });
+    </script>
+</body>
+
+</html>
